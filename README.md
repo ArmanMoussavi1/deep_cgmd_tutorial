@@ -131,7 +131,7 @@ DeepMD-kit uses a YAML configuration file (input.json) to define the training pr
 Modify the type_map to match the atom types in your system.
 
 ---
-4. Train the Model
+## 4. Train the Model
 Run the training process:
 
 ```bash
