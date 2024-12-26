@@ -34,7 +34,7 @@ Verify the installation by running the following command:
 
 ```bash
 dp -h
-
+```
 
 ## Generate Training Data
 
@@ -45,7 +45,7 @@ To create training data for DeepMD-kit, run a LAMMPS simulation that outputs tra
 ```bash
 dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 thermo_style custom step etotal
-
+```
 
 2. Generate Training Data
 To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
@@ -59,7 +59,7 @@ Run a LAMMPS simulation with a potential (e.g., EAM, LJ) and save the trajectory
 ```bash
 dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 thermo_style custom step etotal
-
+```
 
 b. Convert LAMMPS Data to DeepMD Format
 Use a script (or tools like lmp2dp from DeepMD-kit) to convert the LAMMPS trajectory into DeepMD's training data format (data.json). A Python example to extract relevant data:
@@ -74,9 +74,10 @@ import dpdata
 
 data = dpdata.System('dump.lammpstrj', fmt='lammps/dump')
 data.to('deepmd/npy', 'deepmd_data')
+```
+
 This creates the directory deepmd_data containing atomic positions (coord.npy), forces (force.npy), and energies (energy.npy).
-
-
+--
 
 3. Create a Training Configuration
 DeepMD-kit uses a YAML configuration file (input.json) to define the training process. Here's a basic template:
@@ -138,5 +139,48 @@ DeepMD-kit uses a YAML configuration file (input.json) to define the training pr
     "save_freq":              10000
     }
   }
+```
 
-  
+Modify the type_map to match the atom types in your system.
+--
+4. Train the Model
+Run the training process:
+
+```bash
+dp train input.json
+```
+
+DeepMD-kit generates output files in the working directory, including the trained model (model.ckpt).
+--
+5. Test the Model
+Evaluate the trained model against a test dataset:
+
+```bash
+Copy code
+dp test -m ./model.ckpt -s ./test_data
+```
+The test results will include metrics like root mean square error (RMSE) for energies and forces.
+--
+6. Use the Model in LAMMPS
+Integrate the trained model with LAMMPS for production simulations:
+
+a. Convert the Model for LAMMPS
+Export the trained model to a format compatible with LAMMPS:
+
+```bash
+Copy code
+dp freeze -o graph.pb
+```
+
+b. Use the Model in LAMMPS Input
+In the LAMMPS input file, use pair_style deepmd:
+
+```bash
+Copy code
+pair_style    deepmd graph.pb
+pair_coeff
+```
+Run the simulation as usual.
+--
+7. Analyze Results
+Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dynamic properties.
