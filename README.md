@@ -37,6 +37,7 @@ dp -h
 ```
 
 ## Generate Training Data
+To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
 
 ### Prepare LAMMPS Simulation
 
