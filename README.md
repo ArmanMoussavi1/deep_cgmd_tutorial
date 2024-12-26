@@ -129,7 +129,8 @@ DeepMD-kit uses a YAML configuration file (input.json) to define the training pr
 ```
 
 Modify the type_map to match the atom types in your system.
---
+
+---
 4. Train the Model
 Run the training process:
 
@@ -138,26 +139,29 @@ dp train input.json
 ```
 
 DeepMD-kit generates output files in the working directory, including the trained model (model.ckpt).
---
-5. Test the Model
+
+---
+
+## 5. Test the Model
 Evaluate the trained model against a test dataset:
 
 ```bash
 dp test -m ./model.ckpt -s ./test_data
 ```
 The test results will include metrics like root mean square error (RMSE) for energies and forces.
---
-6. Use the Model in LAMMPS
+
+---
+## 6. Use the Model in LAMMPS
 Integrate the trained model with LAMMPS for production simulations:
 
-a. Convert the Model for LAMMPS
+### a. Convert the Model for LAMMPS
 Export the trained model to a format compatible with LAMMPS:
 
 ```bash
 dp freeze -o graph.pb
 ```
 
-b. Use the Model in LAMMPS Input
+### b. Use the Model in LAMMPS Input
 In the LAMMPS input file, use pair_style deepmd:
 
 ```bash
@@ -165,6 +169,7 @@ pair_style    deepmd graph.pb
 pair_coeff
 ```
 Run the simulation as usual.
---
-7. Analyze Results
+
+---
+## 7. Analyze Results
 Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dynamic properties.
