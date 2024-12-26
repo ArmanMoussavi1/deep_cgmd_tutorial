@@ -47,7 +47,7 @@ dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 thermo_style custom step etotal
 ```
 
-2. Generate Training Data
+#2. Generate Training Data
 To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
 
 a. Prepare LAMMPS Simulation
@@ -156,7 +156,6 @@ DeepMD-kit generates output files in the working directory, including the traine
 Evaluate the trained model against a test dataset:
 
 ```bash
-Copy code
 dp test -m ./model.ckpt -s ./test_data
 ```
 The test results will include metrics like root mean square error (RMSE) for energies and forces.
@@ -168,7 +167,6 @@ a. Convert the Model for LAMMPS
 Export the trained model to a format compatible with LAMMPS:
 
 ```bash
-Copy code
 dp freeze -o graph.pb
 ```
 
@@ -176,7 +174,6 @@ b. Use the Model in LAMMPS Input
 In the LAMMPS input file, use pair_style deepmd:
 
 ```bash
-Copy code
 pair_style    deepmd graph.pb
 pair_coeff
 ```
