@@ -28,7 +28,7 @@ Install DeepMD-kit and its dependencies:
 conda create -n deepmd python=3.8
 conda activate deepmd
 pip install deepmd-kit
-
+```
 
 Verify the installation by running the following command:
 
