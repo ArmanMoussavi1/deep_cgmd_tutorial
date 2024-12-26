@@ -62,11 +62,11 @@ import dpdata
 data = dpdata.System('dump.lammpstrj', fmt='lammps/dump')
 data.to('deepmd/npy', 'deepmd_data')
 ```
+This creates the directory deepmd_data containing atomic positions (coord.npy), forces (force.npy), and energies (energy.npy).
 
-#### This creates the directory deepmd_data containing atomic positions (coord.npy), forces (force.npy), and energies (energy.npy).
---
+---
 
-3. Create a Training Configuration
+## 3. Create a Training Configuration
 DeepMD-kit uses a YAML configuration file (input.json) to define the training process. Here's a basic template:
 
 ```json
