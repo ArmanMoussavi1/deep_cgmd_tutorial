@@ -20,7 +20,7 @@ This tutorial guides you through training a Deep Potential Molecular Dynamics (D
 
 ---
 
-## Installation
+## 1. Installation
 
 Install DeepMD-kit and its dependencies:
 
@@ -36,7 +36,7 @@ Verify the installation by running the following command:
 dp -h
 ```
 
-## Generate Training Data
+## 2. Generate Training Data
 To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
 
 ### Prepare LAMMPS Simulation
@@ -48,21 +48,7 @@ dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 thermo_style custom step etotal
 ```
 
-2. Generate Training Data
-To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
-
-a. Prepare LAMMPS Simulation
-Run a LAMMPS simulation with a potential (e.g., EAM, LJ) and save the trajectory in a dump file (e.g., dump.lammpstrj). Also, output the per-atom forces and total system energy.
-
-
-
-
-```bash
-dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
-thermo_style custom step etotal
-```
-
-b. Convert LAMMPS Data to DeepMD Format
+### Convert LAMMPS Data to DeepMD Format
 Use a script (or tools like lmp2dp from DeepMD-kit) to convert the LAMMPS trajectory into DeepMD's training data format (data.json). A Python example to extract relevant data:
 
 ```python
@@ -77,7 +63,7 @@ data = dpdata.System('dump.lammpstrj', fmt='lammps/dump')
 data.to('deepmd/npy', 'deepmd_data')
 ```
 
-This creates the directory deepmd_data containing atomic positions (coord.npy), forces (force.npy), and energies (energy.npy).
+#### This creates the directory deepmd_data containing atomic positions (coord.npy), forces (force.npy), and energies (energy.npy).
 --
 
 3. Create a Training Configuration
