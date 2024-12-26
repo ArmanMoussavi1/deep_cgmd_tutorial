@@ -46,6 +46,7 @@ To create training data for DeepMD-kit, run a LAMMPS simulation that outputs tra
 dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 thermo_style custom step etotal
 
+
 2. Generate Training Data
 To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
 
