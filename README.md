@@ -52,7 +52,6 @@ thermo_style custom step etotal
 Use a script (or tools like lmp2dp from DeepMD-kit) to convert the LAMMPS trajectory into DeepMD's training data format (data.json). A Python example to extract relevant data:
 
 ```python
-Copy code
 from deepmd import DataLoader
 
 # Example script to parse LAMMPS dump into DeepMD format
