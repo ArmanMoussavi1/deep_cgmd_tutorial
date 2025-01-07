@@ -25,9 +25,8 @@ This tutorial guides you through training a Deep Potential Molecular Dynamics (D
 Install DeepMD-kit and its dependencies:
 
 ```bash
-conda create -n deepmd python=3.8
-source activate deepmd
-pip install deepmd-kit
+conda create -n deepmd deepmd-kit=*=*cpu libdeepmd=*=*cpu lammps -c https://conda.deepmodeling.org
+conda activate deepmd
 ```
 
 Verify the installation by running the following command:
@@ -172,3 +171,9 @@ Run the simulation as usual.
 ---
 ## 7. Analyze Results
 Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dynamic properties.
+
+
+module load deepmd-kit/2.1.1
+
+Once loaded, this module includes LAMMPS with the DeepMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
+
