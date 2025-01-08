@@ -27,7 +27,7 @@ Install DeepMD-kit and its dependencies:
 ```bash
 module load anaconda3/2018.12
 conda create -n deepmd deepmd-kit=*=*cpu libdeepmd=*=*cpu lammps -c https://conda.deepmodeling.org
-conda activate deepmd
+source activate deepmd
 ```
 
 Verify the installation by running the following command:
