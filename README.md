@@ -173,8 +173,8 @@ Run the simulation as usual.
 ## 7. Analyze Results
 Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dynamic properties.
 
-
+```bash
 module load deepmd-kit/2.1.1
-
+```
 Once loaded, this module includes LAMMPS with the DeepMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
 
