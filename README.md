@@ -92,8 +92,6 @@ Then use dpdata to read in the data in the deepmd/raw format, and prepare it for
 
 ## DeePMD Model
 
----
-
 ## Create a model to train
 DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to define the training process. Here's a basic template:
 
@@ -158,7 +156,7 @@ DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to 
 
 Modify the type_map to match the atom types in your system.
 
----
+
 ## Train the model
 Run the training process:
 
@@ -168,7 +166,7 @@ dp train input.json
 
 DeepMD-kit generates output files in the working directory, including the trained model (model.ckpt).
 
----
+
 
 ## Evaluate the model
 Evaluate the trained model use a Python script like this:
