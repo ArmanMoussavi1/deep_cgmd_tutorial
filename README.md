@@ -17,6 +17,7 @@ This tutorial guides you through training a Deep Potential Molecular Dynamics (D
 6. [Use the Model in LAMMPS](#use-the-model-in-lammps)
 7. [Analyze Results](#analyze-results)
 8. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
+8. [Deep Water](#deep-water)
 
 ---
 
@@ -197,11 +198,19 @@ Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dyn
 
 
 
-
+---
 ## Side note for Northwestern University Quest users
 Load this module which includes LAMMPS with the DeepMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
 
 ```bash
 module load deepmd-kit/2.1.1
 ```
+
+---
+## Deep Water
+This example utilizes DeePMD to coarse grain (CG) the 2005 edition of the TIP4P water model into a single particle centered at the oxygen site. In data preparation, the TIP4P trajectory is coarsen by summing the forces on each molecule and prescribing the new force to the CG particle.
+
+
+
+
 
