@@ -51,14 +51,14 @@ dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 Manually compute the virial tensor (symmetric) by computing the virial pressure, excluding the kinetic energy term, and multiplying by the system volume:
 
 ```bash
-compute virial_press all pressure NULL virial
+compute virial all pressure NULL virial
 
-variable Wxx eqal c_virial_press[1]*vol
-variable Wyy eqal c_virial_press[2]*vol
-variable Wzz eqal c_virial_press[3]*vol
-variable Wxy eqal c_virial_press[4]*vol
-variable Wxz eqal c_virial_press[5]*vol
-variable Wyz eqal c_virial_press[6]*vol
+variable Wxx equal c_virial[1]*vol
+variable Wxy equal c_virial[2]*vol
+variable Wxz equal c_virial[3]*vol
+variable Wyy equal c_virial[4]*vol
+variable Wyz equal c_virial[5]*vol
+variable Wzz equal c_virial[6]*vol
 ```
 
 
@@ -67,25 +67,26 @@ variable Wyz eqal c_virial_press[6]*vol
 Using the thermo_style command, output the potential energy:
 
 ```bash
-thermo_style custom step pe  c_virial_press[1]  c_virial_press[2] c_virial_press[3] c_virial_press[4] c_virial_press[5] c_virial_press[6]
+thermo_style custom step pe v_Wxx v_Wyy v_Wzz v_Wxy v_Wxz v_Wyz
 ```
 
 ### Prepare data in a suitable format for DeePMD
 Use a script (or packages like dpdata) to convert the simulation outputs into DeepMD's training data format. For simulations in LAMMPS, a convienient method is to first convert all required data to the deepmd/raw format. A sample Python script may look like this:
 
 ```python
-from deepmd import DataLoader
-
-# Example script to parse LAMMPS dump into DeepMD format
-# Use `dpdata` to simplify the process
-import dpdata
-
-data = dpdata.System('dump.lammpstrj', fmt='lammps/dump')
-data.to('deepmd/npy', 'deepmd_data')
+def write_raw_files(prefix, data):
+    with open(f"{prefix}.raw", 'w') as f:
+        for frame in data:
+            flattened = frame.flatten()
+            f.write(" ".join(f"{x:.18e}" for x in flattened) + "\n")
 ```
 Then use dpdata to read in the data in the deepmd/raw format, and prepare it for training. A sample Python script may look like this:
 
 ```python
+import dpdata
+data = dpdata.LabeledSystem('dpmd_raw', type_map=None, fmt='deepmd/raw')
+print('# The data contains %d frames' % len(data))
+data.to('deepmd/npy', './deepmd_data')
 ```
 
 ---
@@ -97,64 +98,57 @@ DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to 
 
 ```json
 {
-    "model": {
-      "type_map": ["TYPE_0"],   
-      "descriptor": {
-        "type": "se_e2_a",
-        "rcut": 2.5,
-        "sel": "auto",
-        "neuron": [25, 50, 100],
-        "resnet_dt": false,
-        "axis_neuron": 16,                  
-        "seed": 1,
-        "_comment": "that's all"        
-      },
-      "fitting_net": {
-        "neuron": [240, 240, 240],
-        "resnet_dt":       true,
-        "seed":            1,
-        "_comment":        "that's all"
+  "model": {
+    "descriptor": {
+      "type": "se_e2_a",
+      "rcut": 6.0,
+      "sel": "auto",
+      "neuron": [150, 100, 50],
+      "resnet_dt": false,
+      "axis_neuron": 32,
+      "seed": 1
+    },
+    "fitting_net": {
+      "neuron": [200, 150, 75],
+      "resnet_dt": true,
+      "seed": 1
     }
-      },
-    "learning_rate": {
-      "type": "exp",
-      "decay_steps":         50,
-      "start_lr":            0.001,    
-      "stop_lr":             3.51e-8,
-      "_comment":            "that's all"
   },
-  "loss" :{
-    "type":                "ener",
-    "start_pref_e":        0.02,
-    "limit_pref_e":        1,
-    "start_pref_f":        1000,
-    "limit_pref_f":        1,
-    "start_pref_v":        0,
-    "limit_pref_v":        0,
-    "_comment":            "that's all"
+  "learning_rate": {
+    "type": "exp",
+    "decay_steps": 100,
+    "start_lr": 0.001,
+    "stop_lr": 3.51e-8
   },
-  "training" : {
+  "loss": {
+    "type": "ener",
+    "start_pref_e": 0.02,
+    "limit_pref_e": 1,
+    "start_pref_f": 500,
+    "limit_pref_f": 1,
+    "start_pref_v": 5,
+    "limit_pref_v": 1
+  },
+  "training": {
     "training_data": {
-        "systems":            ["./deepmd_data"],     
-        "batch_size":         "auto",                       
-        "_comment":           "that's all"
+      "systems": ["./training_data"],
+      "batch_size": "auto"
     },
-    "validation_data":{
-        "systems":            ["./deepmd_data"],
-        "batch_size":         "auto",               
-        "numb_btch":          1,
-        "_comment":           "that's all"
+    "validation_data": {
+      "systems": ["./validation_data"],
+      "batch_size": "auto",
+      "numb_btch": 1
     },
-    "numb_steps":             1000,                           
-    "seed":                   10,
-    "disp_file":              "lcurve.out",
-    "disp_freq":              200,
-    "save_freq":              10000
-    }
+    "numb_steps": 5000,
+    "seed": 1,
+    "disp_file": "lcurve.out",
+    "disp_freq": 200,
+    "save_freq": 10000
   }
+}
 ```
 
-Modify the type_map to match the atom types in your system.
+Modify the to match your system.
 
 
 ## Train the model
@@ -164,15 +158,12 @@ Run the training process:
 dp train input.json
 ```
 
-DeepMD-kit generates output files in the working directory, including the trained model (model.ckpt).
+DeePMD-kit generates output files in the working directory, including the trained model.
 
 
 
 ## Evaluate the model
-Evaluate the trained model use a Python script like this:
-
-```python
-```
+Evaluate the trained model use a Python script like [Deep Water](./deep_water/train_model.py)
 The test results will include metrics like root mean square error (RMSE) for energies, forces, and virials.
 
 ---
