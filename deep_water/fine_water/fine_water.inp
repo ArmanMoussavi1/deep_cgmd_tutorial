@@ -31,7 +31,7 @@ pair_style         lj/cut/tip4p/long 1 2 1 1 0.1546 14.0
 ##############################
 # Input Data
 ##############################
-read_data          cycle_900.data
+read_data          900.data
 
 ##############################
 # Long-Range Interactions
