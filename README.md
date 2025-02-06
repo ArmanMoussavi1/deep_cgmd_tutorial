@@ -72,7 +72,7 @@ thermo_style custom step pe v_Wxx v_Wyy v_Wzz v_Wxy v_Wxz v_Wyz
 ```
 
 ### Prepare data in a suitable format for DeePMD
-Use a script (or packages like dpdata) to convert the simulation outputs into DeepMD's training data format. For simulations in LAMMPS, a convienient method is to first convert all required data to the deepmd/raw format. A sample Python script may look like this:
+Use a script (or packages like dpdata) to convert the simulation outputs into DeepMD's training data format. For simulations in LAMMPS, a convenient method is to first convert all required data to the deepmd/raw format. A sample Python script may look like this:
 
 ```python
 def write_raw_files(prefix, data):
