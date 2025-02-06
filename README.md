@@ -11,13 +11,14 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 2. [Generate Training Data](#generate-training-data)
     - [Prepare LAMMPS Simulation for training data](#prepare-lammps-simulation-for-training-data)
     - [Prepare data in a suitable format for DeePMD](#prepare-data-in-a-suitable-format-for-deepmd)
-3. [Create a model to train](#create-a-model-to-train)
-4. [Train the Model](#train-the-model)
-5. [Evaluate the model](#evaluate-the-model)
-6. [Use the Model in LAMMPS](#use-the-model-in-lammps)
-7. [Analyze Results](#analyze-results)
-8. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
-8. [Deep Water (example)](#deep-water-example)
+3. [DeePMD Model](#deepmd-model)
+    - [Create a model to train](#create-a-model-to-train)
+    - [Train the Model](#train-the-model)
+    - [Evaluate the model](#evaluate-the-model)
+4. [Use the Model in LAMMPS](#use-the-model-in-lammps)
+5. [Analyze Results](#analyze-results)
+6. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
+7. [Deep Water (example)](#deep-water-example)
 
 ---
 
@@ -87,8 +88,9 @@ Then use dpdata to read in the data in the deepmd/raw format, and prepare it for
 ```python
 ```
 
+---
 
-
+## DeePMD Model
 
 ---
 
