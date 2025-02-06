@@ -62,14 +62,14 @@ variable Wyz eqal c_virial_press[6]*vol
 
 
 
-Using the thermodynamic info compute, output the   Add the following commands to your LAMMPS input script:
+Using the thermo_style command, output the potential energy:
 
 ```bash
-thermo_style custom step 
+thermo_style custom step pe
 ```
 
-### Convert LAMMPS Data to DeepMD Format
-Use a script (or tools like lmp2dp from DeepMD-kit) to convert the LAMMPS trajectory into DeepMD's training data format (data.json). A Python example to extract relevant data:
+### Prepare data in a suitable format for DeePMD
+Use a script (or packages like dpdata) to convert the simulation outputs into DeepMD's training data format. For simulations in LAMMPS, a convienient method is to first convert all required data to the deepmd/raw format. A sample Python script may look like this:
 
 ```python
 from deepmd import DataLoader
@@ -81,12 +81,18 @@ import dpdata
 data = dpdata.System('dump.lammpstrj', fmt='lammps/dump')
 data.to('deepmd/npy', 'deepmd_data')
 ```
-This creates the directory deepmd_data containing atomic positions (coord.npy), forces (force.npy), and energies (energy.npy).
+Then use dpdata to read in the data in the deepmd/raw format, and prepare it for training. A sample Python script may look like this:
+
+```python
+```
+
+
+
 
 ---
 
-## 3. Create a Training Configuration
-DeepMD-kit uses a YAML configuration file (input.json) to define the training process. Here's a basic template:
+## 3. Create a model to train
+DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to define the training process. Here's a basic template:
 
 ```json
 {
@@ -161,31 +167,27 @@ DeepMD-kit generates output files in the working directory, including the traine
 
 ---
 
-## 5. Test the Model
-Evaluate the trained model against a test dataset:
+## 5. Evaluate the Model
+Evaluate the trained model use a Python script like this:
 
-```bash
-dp test -m ./model.ckpt -s ./test_data
+```python
 ```
-The test results will include metrics like root mean square error (RMSE) for energies and forces.
+The test results will include metrics like root mean square error (RMSE) for energies, forces, and virials.
 
 ---
 ## 6. Use the Model in LAMMPS
-Integrate the trained model with LAMMPS for production simulations:
 
-### a. Convert the Model for LAMMPS
-Export the trained model to a format compatible with LAMMPS:
+First, export the trained model to a format compatible with LAMMPS:
 
 ```bash
 dp freeze -o graph.pb
 ```
 
-### b. Use the Model in LAMMPS Input
-In the LAMMPS input file, use pair_style deepmd:
+The, call the model in LAMMPS Input. An example LAMMPS input script may look like this:
 
 ```bash
-pair_style    deepmd graph.pb
-pair_coeff
+pair_style    deepmd <path_to_model>/graph.pb
+pair_coeff **
 ```
 Run the simulation as usual.
 
@@ -193,8 +195,13 @@ Run the simulation as usual.
 ## 7. Analyze Results
 Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dynamic properties.
 
+
+
+
+## Side note for Northwestern University Quest users
+Load this module which includes LAMMPS with the DeepMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
+
 ```bash
 module load deepmd-kit/2.1.1
 ```
-Once loaded, this module includes LAMMPS with the DeepMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
 
