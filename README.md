@@ -9,14 +9,14 @@ This tutorial guides you through training a Deep Potential Molecular Dynamics (D
 
 1. [Installation](#installation)
 2. [Generate Training Data](#generate-training-data)
-    - [Prepare LAMMPS Simulation](#prepare-lammps-simulation-for-training-data)
-    - [Convert LAMMPS Data to DeepMD Format](#prepare-data-in-a-suitable-format-for-deepmd)
-3. [Create a Training Configuration](#create-a-model-to-train)
+    - [Prepare LAMMPS Simulation for training data](#prepare-lammps-simulation-for-training-data)
+    - [Prepare data in a suitable format for DeePMD](#prepare-data-in-a-suitable-format-for-deepmd)
+3. [Create a model to train](#create-a-model-to-train)
 4. [Train the Model](#train-the-model)
-5. [Test the Model](#evaluate-the-model)
+5. [Evaluate the model](#evaluate-the-model)
 6. [Use the Model in LAMMPS](#use-the-model-in-lammps)
 7. [Analyze Results](#analyze-results)
-8. [Additional Tips](#side-note-for-northwestern-university-quest-users)
+8. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
 
 ---
 
