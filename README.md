@@ -1,7 +1,7 @@
 # deep_cgmd_tutorial
 # DeePMD-kit Tutorial: Learning from a LAMMPS Simulation with an example (Deep Water)
 
-This tutorial guides you through training and using a Deep Potential Molecular Dynamics (DeepMD) model. The example, Deep Water, uses LAMMPS to simulate the 2005 edition of the TIP4P water model. The output of the fine-grained simulation is coarse-grained (CG) during the data preparation. Finally the Deep Water model contains a single particle per molecule.
+This tutorial guides you through training and using a Deep Potential Molecular Dynamics (DeePMD) model. The example, Deep Water, uses LAMMPS to simulate the 2005 edition of the TIP4P water model. The output of the fine-grained simulation is coarse-grained (CG) during the data preparation. Finally the Deep Water model contains a single particle per molecule.
 
 ---
 
@@ -25,7 +25,7 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 ## Installation
 *Needs update*
 
-Install DeepMD-kit and its dependencies:
+Install DeePMD-kit and its dependencies:
 
 ```bash
 module load anaconda3/2018.12
@@ -44,7 +44,7 @@ To train a model, you'll need trajectory data (box dimensions, atomic positions,
 
 ### Prepare LAMMPS Simulation for training data
 
-To create training data for DeepMD-kit, run a LAMMPS simulation that outputs trajectory data, including atomic positions and per-atom forces. 
+To create training data for DeePMD-kit, run a LAMMPS simulation that outputs trajectory data, including atomic positions and per-atom forces. 
 ```bash
 dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
 ```
@@ -72,7 +72,7 @@ thermo_style custom step pe v_Wxx v_Wyy v_Wzz v_Wxy v_Wxz v_Wyz
 ```
 
 ### Prepare data in a suitable format for DeePMD
-Use a script (or packages like dpdata) to convert the simulation outputs into DeepMD's training data format. For simulations in LAMMPS, a convenient method is to first convert all required data to the deepmd/raw format. A sample Python script may look like this:
+Use a script (or packages like dpdata) to convert the simulation outputs into DeePMD's training data format. For simulations in LAMMPS, a convenient method is to first convert all required data to the deepmd/raw format. A sample Python script may look like this:
 
 ```python
 def write_raw_files(prefix, data):
@@ -99,7 +99,7 @@ data.to('deepmd/npy', './deepmd_data')
 ## DeePMD Model
 
 ## Create a model to train
-DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to define the training process. Here's a basic template:
+DeePMD-kit uses a JavaScript Object Notation configuration file (input.json) to define the training process. Here's a basic template:
 
 ```json
 {
@@ -200,7 +200,7 @@ Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dyn
 
 ---
 ## Side note for Northwestern University Quest users
-Load this module which includes LAMMPS with the DeepMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
+Load this module which includes LAMMPS with the DeePMD package pre-installed. The LAMMPS version is 29 Sep 2021 - Update 3.
 
 ```bash
 module load deepmd-kit/2.1.1
