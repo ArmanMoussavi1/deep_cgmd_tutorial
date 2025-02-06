@@ -18,11 +18,11 @@ atom_style         atomic
 ##############################
 # Lattice and Box Setup
 ##############################
-lattice            fcc 4.9277                     # Set lattice spacing for density ~0.8442
+lattice            fcc 4.9277  # Estimated to have correct density
 region             box block 0 5 0 5 0 5
 create_box         1 box
 create_atoms       1 box
-mass               1 18.01528                 # Set mass of type 1 atoms 
+mass               1 18.01528    
 
 
 ##############################
