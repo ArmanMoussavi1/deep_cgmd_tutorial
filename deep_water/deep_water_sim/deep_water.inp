@@ -1,7 +1,7 @@
 #!/bin/bash
 # Written by Arman Moussavi
 
-# Simple Equilibration for FCC Lattice with DeepMD Potential
+# Simple Equilibration for CG water with DeePMD Potential
 
 ##############################
 # Simulation Parameters
