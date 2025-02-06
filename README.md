@@ -39,7 +39,7 @@ dp -h
 ```
 ---
 ## Generate Training Data
-To train a model, you'll need trajectory data (box dimensions, atomic positions, forces, energies, and virials).
+To train a model, you'll need trajectory data (box dimensions, atomic positions, forces, energies, and virials). [Fine water](./deep_water/fine_water/fine_water.inp)
 
 ### Prepare LAMMPS Simulation for training data
 
@@ -80,6 +80,9 @@ def write_raw_files(prefix, data):
             flattened = frame.flatten()
             f.write(" ".join(f"{x:.18e}" for x in flattened) + "\n")
 ```
+[CG trajectory](./deep_water/prep_data/cg_trajectory.py)
+
+
 Then use dpdata to read in the data in the deepmd/raw format, and prepare it for training. A sample Python script may look like this:
 
 ```python
@@ -88,6 +91,7 @@ data = dpdata.LabeledSystem('dpmd_raw', type_map=None, fmt='deepmd/raw')
 print('# The data contains %d frames' % len(data))
 data.to('deepmd/npy', './deepmd_data')
 ```
+[Prep data](./deep_water/prep_data/prep_data.py)
 
 ---
 
@@ -147,6 +151,9 @@ DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to 
   }
 }
 ```
+
+[Deep model](./deep_water/train_model/input.json)
+
 
 Modify the to match your system.
 
