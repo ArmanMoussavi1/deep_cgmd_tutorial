@@ -9,18 +9,18 @@ This tutorial guides you through training a Deep Potential Molecular Dynamics (D
 
 1. [Installation](#installation)
 2. [Generate Training Data](#generate-training-data)
-    - [Prepare LAMMPS Simulation](#prepare-lammps-simulation)
-    - [Convert LAMMPS Data to DeepMD Format](#convert-lammps-data-to-deepmd-format)
-3. [Create a Training Configuration](#create-a-training-configuration)
+    - [Prepare LAMMPS Simulation](#prepare-lammps-simulation-for-training-data)
+    - [Convert LAMMPS Data to DeepMD Format](#prepare-data-in-a-suitable-format-for-deepmd)
+3. [Create a Training Configuration](#create-a-model-to-train)
 4. [Train the Model](#train-the-model)
-5. [Test the Model](#test-the-model)
+5. [Test the Model](#evaluate-the-model)
 6. [Use the Model in LAMMPS](#use-the-model-in-lammps)
 7. [Analyze Results](#analyze-results)
-8. [Additional Tips](#additional-tips)
+8. [Additional Tips](#side-note-for-northwestern-university-quest-users)
 
 ---
 
-## 1. Installation
+## Installation
 
 Install DeepMD-kit and its dependencies:
 
@@ -36,7 +36,7 @@ Verify the installation by running the following command:
 dp -h
 ```
 
-## 2. Generate Training Data
+## Generate Training Data
 To train a model, you'll need trajectory data (box dimensions, atomic positions, forces, energies, and virials).
 
 ### Prepare LAMMPS Simulation for training data
@@ -91,7 +91,7 @@ Then use dpdata to read in the data in the deepmd/raw format, and prepare it for
 
 ---
 
-## 3. Create a model to train
+## Create a model to train
 DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to define the training process. Here's a basic template:
 
 ```json
@@ -156,7 +156,7 @@ DeepMD-kit uses a JavaScript Object Notation configuration file (input.json) to 
 Modify the type_map to match the atom types in your system.
 
 ---
-## 4. Train the Model
+## Train the model
 Run the training process:
 
 ```bash
@@ -167,7 +167,7 @@ DeepMD-kit generates output files in the working directory, including the traine
 
 ---
 
-## 5. Evaluate the Model
+## Evaluate the model
 Evaluate the trained model use a Python script like this:
 
 ```python
@@ -175,7 +175,7 @@ Evaluate the trained model use a Python script like this:
 The test results will include metrics like root mean square error (RMSE) for energies, forces, and virials.
 
 ---
-## 6. Use the Model in LAMMPS
+## Use the model in LAMMPS
 
 First, export the trained model to a format compatible with LAMMPS:
 
@@ -192,7 +192,7 @@ pair_coeff **
 Run the simulation as usual.
 
 ---
-## 7. Analyze Results
+## Analyze Results
 Perform analysis on the LAMMPS output, such as structural, thermodynamic, or dynamic properties.
 
 
