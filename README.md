@@ -187,7 +187,7 @@ The, call the model in LAMMPS Input. An example LAMMPS input script may look lik
 
 ```bash
 pair_style    deepmd <path_to_model>/graph.pb
-pair_coeff **
+pair_coeff * *
 ```
 Run the simulation as usual. [Deep Water](./deep_water/deep_water_sim/deep_water.inp)
 
