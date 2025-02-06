@@ -1,3 +1,4 @@
+# Written by Arman Moussavi
 import numpy as np
 
 # Input and output filenames
