@@ -37,7 +37,7 @@ Verify the installation by running the following command:
 ```bash
 dp -h
 ```
-
+---
 ## Generate Training Data
 To train a model, you'll need trajectory data (box dimensions, atomic positions, forces, energies, and virials).
 
