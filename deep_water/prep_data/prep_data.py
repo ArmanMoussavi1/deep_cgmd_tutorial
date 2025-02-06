@@ -1,12 +1,9 @@
+# Written by Arman Moussavi
+
 import numpy as np
 import os
 import dpdata
 import lammps_logfile
-
-
-
-
-
 
 
 def read_lammps_dump(filename):
