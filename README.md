@@ -23,7 +23,8 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 ---
 
 ## Installation
-*Needs update
+*Needs update*
+
 Install DeepMD-kit and its dependencies:
 
 ```bash
