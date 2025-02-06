@@ -1,7 +1,7 @@
 import numpy as np
 
 # Input and output filenames
-input_filename = '../tip4p_training_data.lammpstrj'
+input_filename = '../fine_water/tip4p_training_data.lammpstrj'
 output_filename = 'cg_trajectory.lammpstrj'
 
 def read_trajectory(filename):
