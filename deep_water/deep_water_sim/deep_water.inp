@@ -1,0 +1,78 @@
+#!/bin/bash
+# Written by Arman Moussavi
+
+# Simple Equilibration for FCC Lattice with DeepMD Potential
+
+##############################
+# Simulation Parameters
+##############################
+units              metal
+boundary           p p p
+dimension          3
+
+##############################
+# Atom Parameters
+##############################
+atom_style         atomic
+
+##############################
+# Lattice and Box Setup
+##############################
+lattice            fcc 4.9277                     # Set lattice spacing for density ~0.8442
+region             box block 0 5 0 5 0 5
+create_box         1 box
+create_atoms       1 box
+mass               1 18.01528                 # Set mass of type 1 atoms 
+
+
+##############################
+# Potential Styles
+##############################
+pair_style         deepmd ../train_model/graph.pb
+pair_coeff         * *
+
+##############################
+# Neighbor List
+##############################
+neighbor           2.0 bin
+neigh_modify       every 1 delay 0 check yes one 10000 binsize 1.0
+
+
+##############################
+# Thermodynamic Output
+##############################
+thermo             500
+thermo_style custom step temp press vol etotal density pe ke
+dump 1 all custom 500 trj_deep_water.lammpstrj id type x y z fx fy fz
+
+
+velocity all create 298.0 1234567 rot yes dist gaussian  # Initialize velocities at 298 K
+timestep 0.001
+
+##############################
+# NVT Simulation: Equilibration
+##############################
+fix fnvt all nvt temp 298.0 298.0 0.1                     # NVT: constant temperature
+run 20000  # Equilibrate under NVT
+unfix fnvt
+
+
+
+##############################
+# NPT Simulation: Density Equilibration
+##############################
+
+fix fnpt all npt temp 298.0 298.0 0.1 iso 1.01325 1.01325 1.0  # NPT: constant pressure and temperature
+
+
+# Run NPT to equilibrate the density
+run 20000  # Adjust the steps to achieve the desired density
+unfix fnpt
+
+
+
+
+##############################
+# Final Output
+##############################
+write_restart equilibrated.restart
