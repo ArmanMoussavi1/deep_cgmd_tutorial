@@ -170,7 +170,7 @@ DeePMD-kit generates output files in the working directory, including the traine
 
 
 ## Evaluate the model
-Evaluate the trained model use a Python script like [Deep Water](./deep_water/train_model.py)
+Evaluate the trained model use a Python script like [Evaluate](./deep_water/train_model/plot.py)
 The test results will include metrics like root mean square error (RMSE) for energies, forces, and virials.
 
 ---
@@ -188,7 +188,8 @@ The, call the model in LAMMPS Input. An example LAMMPS input script may look lik
 pair_style    deepmd <path_to_model>/graph.pb
 pair_coeff **
 ```
-Run the simulation as usual.
+Run the simulation as usual. [Deep Water](./deep_water/deep_water_sim/deep_water.inp)
+
 
 ---
 ## Analyze Results
