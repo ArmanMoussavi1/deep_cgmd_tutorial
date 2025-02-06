@@ -37,15 +37,35 @@ dp -h
 ```
 
 ## 2. Generate Training Data
-To train a model, you'll need trajectory data (atomic positions, forces, energies, etc.) from LAMMPS.
+To train a model, you'll need trajectory data (box dimensions, atomic positions, forces, energies, and virials).
 
-### Prepare LAMMPS Simulation
+### Prepare LAMMPS Simulation for training data
 
-To create training data for DeepMD-kit, run a LAMMPS simulation that outputs trajectory data, including atomic positions, forces, and energies. Add the following commands to your LAMMPS input script:
-
+To create training data for DeepMD-kit, run a LAMMPS simulation that outputs trajectory data, including atomic positions and per-atom forces. 
 ```bash
 dump 1 all custom 100 dump.lammpstrj id type x y z fx fy fz
-thermo_style custom step etotal
+```
+
+Manually compute the virial tensor (symmetric) by computing the virial pressure, excluding the kinetic energy term, and multiplying by the system volume:
+
+```bash
+compute virial_press all pressure NULL virial
+
+variable Wxx eqal c_virial_press[1]*vol
+variable Wyy eqal c_virial_press[2]*vol
+variable Wzz eqal c_virial_press[3]*vol
+variable Wxy eqal c_virial_press[4]*vol
+variable Wxz eqal c_virial_press[5]*vol
+variable Wyz eqal c_virial_press[6]*vol
+```
+
+
+
+
+Using the thermodynamic info compute, output the   Add the following commands to your LAMMPS input script:
+
+```bash
+thermo_style custom step 
 ```
 
 ### Convert LAMMPS Data to DeepMD Format
