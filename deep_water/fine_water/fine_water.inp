@@ -1,0 +1,113 @@
+#!/bin/bash
+#Writen by Faramarz Joodaki and modified by Arman Moussavi                                                   
+
+# Simple Equilibration for Water
+
+##############################
+# Simulation Parameters
+##############################
+units              real
+boundary           p p p
+box tilt           large
+
+##############################
+# Neighbor List
+##############################
+neigh_modify       delay 2 every 1
+
+##############################
+# Atom Parameters
+##############################
+atom_style         full
+
+##############################
+# Potential Styles
+##############################
+bond_style         harmonic
+angle_style        harmonic
+dihedral_style     none
+pair_style         lj/cut/tip4p/long 1 2 1 1 0.1546 14.0
+
+##############################
+# Input Data
+##############################
+read_data          cycle_900.data
+
+##############################
+# Long-Range Interactions
+##############################
+kspace_style       pppm/tip4p 1.0e-6
+
+##############################
+# Mixing Rules and Special Bonds
+##############################
+pair_modify        tail yes
+pair_modify        mix arithmetic
+special_bonds      lj 0.0 0.0 0.0 coul 0.0 0.0 0.0
+
+##############################
+# SHAKE Constraints (Water)
+##############################
+fix fshake all shake 0.0001 20 0 t 1 2 b 1 a 1
+
+##############################
+# Thermodynamic Output
+##############################
+thermo             500
+
+compute virial all pressure NULL virial
+
+variable Wxx equal c_virial[1]*vol
+variable Wxy equal c_virial[2]*vol
+variable Wxz equal c_virial[3]*vol
+variable Wyy equal c_virial[4]*vol
+variable Wyz equal c_virial[5]*vol
+variable Wzz equal c_virial[6]*vol
+
+
+
+thermo_style custom step temp vol press etotal density pe ke v_Wxx v_Wyy v_Wzz v_Wxy v_Wxz v_Wyz
+
+
+
+##############################
+# NPT Simulation: Density Equilibration
+##############################
+velocity all create 298.0 1234567 rot yes dist gaussian  # Initialize velocities at 298 K
+fix fnpt all npt temp 298.0 298.0 100 iso 1.0 1.0 1000  # NPT: constant pressure and temperature
+timestep           1.0
+
+# Run NPT to equilibrate the density
+run 200000  # Adjust the steps to achieve the desired density
+unfix fnpt
+
+
+
+
+
+
+##############################
+# Output Files
+##############################
+
+
+# compute        peratomenergy all pe/atom
+
+# compute        peratomstress all stress/atom NULL
+
+
+# thermo_style custom step temp press etotal density pe ke pxx pyy pzz pxy pxz pyz
+dump 1 all custom 500 tip4p_training_data.lammpstrj id mol type x y z fx fy fz
+dump_modify 1 sort id
+
+##############################
+# NVT Simulation: Equilibration
+##############################
+fix fnvt all nvt temp 298.0 298.0 100                     # NVT: constant temperature
+run 1000000  # Further equilibrate under NVT
+unfix fnvt
+
+##############################
+# Final Output
+##############################
+write_restart equilibrated.restart
