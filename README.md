@@ -1,5 +1,5 @@
 # deep_md_tutorial
-# DeepMD-kit Tutorial: Learning from a LAMMPS Simulation
+# DeepMD-kit Tutorial: Learning from a LAMMPS Simulation with an example (Deep Water)
 
 This tutorial guides you through training and using a Deep Potential Molecular Dynamics (DeepMD) model. The example, Deep Water, uses LAMMPS to simulate the 2005 edition of the TIP4P water model. The output of the fine-grained simulation is coarse-grained (CG) during the data preparation. Finally the Deep Water model contains a single particle located at the oxygen site.
 
