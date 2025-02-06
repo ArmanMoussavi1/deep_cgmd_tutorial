@@ -67,7 +67,7 @@ variable Wyz eqal c_virial_press[6]*vol
 Using the thermo_style command, output the potential energy:
 
 ```bash
-thermo_style custom step pe
+thermo_style custom step pe  c_virial_press[1]  c_virial_press[2] c_virial_press[3] c_virial_press[4] c_virial_press[5] c_virial_press[6]
 ```
 
 ### Prepare data in a suitable format for DeePMD
