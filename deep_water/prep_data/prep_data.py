@@ -138,7 +138,7 @@ def main():
     filename = "cg_trajectory.lammpstrj"  # Replace with your actual filename
     box_bounds, coordinates, forces = read_lammps_dump(filename)
 
-    PE, virials = extract_pe_and_virials_from_log("../log.lammps")
+    PE, virials = extract_pe_and_virials_from_log("../fine_water/log.lammps")
 
 
 
