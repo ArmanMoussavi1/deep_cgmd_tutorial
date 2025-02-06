@@ -17,7 +17,7 @@ This tutorial guides you through training a Deep Potential Molecular Dynamics (D
 6. [Use the Model in LAMMPS](#use-the-model-in-lammps)
 7. [Analyze Results](#analyze-results)
 8. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
-8. [Deep Water (example)](#deep-water-(example))
+8. [Deep Water (example)](#deep-water-example)
 
 ---
 
