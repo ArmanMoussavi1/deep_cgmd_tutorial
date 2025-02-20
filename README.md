@@ -25,6 +25,90 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 ## Installation
 *Needs update*
 
+
+
+wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz
+tar -xvzf openmpi-4.1.5.tar.gz
+cd openmpi-4.1.5
+./configure --prefix=$HOME/openmpi
+make -j$(nproc)
+make install
+
+
+export PATH=$HOME/openmpi/bin:$PATH
+export LD_LIBRARY_PATH=$HOME/openmpi/lib:$LD_LIBRARY_PATH
+export C_INCLUDE_PATH=$HOME/openmpi/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$HOME/openmpi/include:$CPLUS_INCLUDE_PATH
+# Add these lines to your ~/.bashrc or ~/.bash_profile for persistence.
+
+
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+
+conda create -n deepmd python=3.9.16
+conda init
+source ~/.bashrc
+conda activate deepmd
+python3 -m pip install tensorflow==2.15.0
+pip install deepmd-kit[gpu,cu12,lmp,ipi]
+
+
+
+
+
+
+
+
+
+git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
+cd ./deepmd-kit/source && mkdir -p build && cd build && cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local .. && cmake --build . --parallel 4 && make install && make lammps
+
+cd ../../..
+
+mkdir -p ./lammps-src
+cd ./lammps-src
+wget https://github.com/lammps/lammps/archive/stable_29Aug2024_update1.tar.gz && tar xf stable_29Aug2024_update1.tar.gz
+mkdir -p ./lammps-stable_29Aug2024_update1/build/
+cd ./lammps-stable_29Aug2024_update1/build/
+
+
+find ~ -type d -name "deepmd-kit"  (will return a <path_to_deepmd-kit>)
+echo "include(<path_to_deepmd-kit>/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
+echo "include(/home/amp4121/lammps_deepmd/deepmd-kit/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
+
+
+cmake \
+    -D CMAKE_INSTALL_PREFIX=$python_venv_path \
+    -D LAMMPS_INSTALL_RPATH=ON \
+    -D BUILD_SHARED_LIBS=yes \
+    -D PKG_EXTRA-FIX=ON \
+    -D PKG_EXTRA-PAIR=ON \
+    -D PKG_MISC=ON \
+    -D PKG_PYTHON=ON \
+    -D PKG_KSPACE=ON \
+    -D PKG_ML-SNAP=ON \
+    -D PKG_MANYBODY=ON \
+    -D PKG_GPU=ON \
+    -D GPU_API=CUDA \
+    -D GPU_PREC=mixed \
+    -D PKG_MOLECULE=yes -D PKG_RIGID=yes -D PKG_MC=yes -D PKG_USER-COLVARS=yes -D DOWNLOAD_EIGEN3=yes -D PKG_PLUGIN=ON \
+    -DCMAKE_PREFIX_PATH=$python_venv_path ../cmake
+
+make -j4 install DESTDIR=$HOME/.local
+
+
+cd ../../..
+
+
+pip install deepmd-kit[gpu,cu12,lmp,ipi]
+
+conda install tensorflow
+
+
+
+
 Install DeePMD-kit and its dependencies:
 
 ```bash
