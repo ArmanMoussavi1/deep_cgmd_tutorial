@@ -78,7 +78,7 @@ find ~ -type d -name "deepmd-kit"  (will return a <path_to_deepmd-kit>)
 echo "include(<path_to_deepmd-kit>/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
 echo "include(/home/amp4121/lammps_deepmd/deepmd-kit/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
 
-'''
+```bash
 cmake \
     -D CMAKE_INSTALL_PREFIX=$python_venv_path \
     -D LAMMPS_INSTALL_RPATH=ON \
