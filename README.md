@@ -60,6 +60,21 @@ pip install deepmd-kit[gpu,cu12,lmp,ipi]
 
 
 
+----------------------------------------------------
+
+Alternative: Use a Package Manager for Local Installation
+conda install -c conda-forge openmpi
+
+conda install libffi --force-reinstall
+
+
+
+
+
+
+
+
+
 
 
 git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
