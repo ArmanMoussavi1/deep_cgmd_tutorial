@@ -78,7 +78,7 @@ find ~ -type d -name "deepmd-kit"  (will return a <path_to_deepmd-kit>)
 echo "include(<path_to_deepmd-kit>/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
 echo "include(/home/amp4121/lammps_deepmd/deepmd-kit/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
 
-
+'''
 cmake \
     -D CMAKE_INSTALL_PREFIX=$python_venv_path \
     -D LAMMPS_INSTALL_RPATH=ON \
@@ -95,7 +95,7 @@ cmake \
     -D GPU_PREC=mixed \
     -D PKG_MOLECULE=yes -D PKG_RIGID=yes -D PKG_MC=yes -D PKG_USER-COLVARS=yes -D DOWNLOAD_EIGEN3=yes -D PKG_PLUGIN=ON \
     -DCMAKE_PREFIX_PATH=$python_venv_path ../cmake
-
+```
 make -j4 install DESTDIR=$HOME/.local
 
 
