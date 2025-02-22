@@ -7,35 +7,43 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Generate Training Data](#generate-training-data)
+1. [DeePMD-kit & LAMMPS Installation Guide](#deepmd-kit-lammps-installation-guide)
+    - [Install Miniconda](#install-miniconda)
+    - [Set Up Conda Environment](#set-up-conda-environment)
+    - [Install OpenMPI](#install-openmpi)
+    - [Install DeePMD-kit](#install-deepmd-kit)
+    - [Install LAMMPS with DeePMD-kit](#install-lammps-with-deepmd-kit)
+3. [Generate Training Data](#generate-training-data)
     - [Prepare LAMMPS Simulation for training data](#prepare-lammps-simulation-for-training-data)
     - [Prepare data in a suitable format for DeePMD](#prepare-data-in-a-suitable-format-for-deepmd)
-3. [DeePMD Model](#deepmd-model)
+4. [DeePMD Model](#deepmd-model)
     - [Create a model to train](#create-a-model-to-train)
     - [Train the Model](#train-the-model)
     - [Evaluate the model](#evaluate-the-model)
-4. [Use the Model in LAMMPS](#use-the-model-in-lammps)
-5. [Analyze Results](#analyze-results)
-6. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
-7. [Deep Water (example)](#deep-water-example)
+5. [Use the Model in LAMMPS](#use-the-model-in-lammps)
+6. [Analyze Results](#analyze-results)
+7. [Side note for Northwestern University Quest users](#side-note-for-northwestern-university-quest-users)
+8. [Deep Water (example)](#deep-water-example)
 
 ---
 
-## Installation Guide for DeePMD-kit and LAMMPS
-*in progress*
+## DeePMD-kit & LAMMPS Installation Guide
 
+This guide provides step-by-step instructions to install **Miniconda**, **OpenMPI**, **DeePMD-kit**, and **LAMMPS** with DeePMD support. Follow the instructions carefully to ensure a successful installation.
 
-
-
+---
 ### Install Miniconda
+
 ```bash
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm ~/miniconda3/miniconda.sh
 ```
+
+---
 ### Set Up Conda Environment
+
 ```bash
 conda create -n deepmd python=3.9.16
 conda init
@@ -44,7 +52,10 @@ conda activate deepmd
 python3 -m pip install tensorflow==2.15.0
 pip install deepmd-kit[gpu,cu12,lmp,ipi]
 ```
+
+---
 ### Install OpenMPI
+
 ```bash
 wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz
 tar -xvzf openmpi-4.1.5.tar.gz
@@ -55,57 +66,80 @@ make -j$(nproc)
 make install
 ```
 
-Add these lines to your .bashrc:
+#### Add OpenMPI to Environment
+Add the following lines to your `~/.bashrc` file:
+
 ```bash
 export PATH=$HOME/local/openmpi/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/local/openmpi/lib:$LD_LIBRARY_PATH
 export MPI_HOME=$HOME/local/openmpi
 ```
-Reload bash:
+
+Reload the shell environment:
 ```bash
 source ~/.bashrc
-```
-Reload Environement:
-```bash
 conda activate deepmd
 ```
+
+Check OpenMPI installation:
+```bash
+mpicc --version
+mpicxx --version
+which mpirun
+```
+
+---
 ### Install DeePMD-kit
+
 ```bash
 mkdir lammps_deepmd && cd lammps_deepmd
 git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
-cd ./deepmd-kit/source && mkdir -p build && cd build && cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local .. && cmake --build . --parallel 4 && make install && make lammps
+cd ./deepmd-kit/source && mkdir -p build && cd build
+cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local ..
+cmake --build . --parallel 4
+make install
+make lammps
 cd ../../..
 ```
-Add DeePMD to Environment
+
+#### Add DeePMD to Environment
+Add the following lines to your `~/.bashrc` file:
+
 ```bash
 export DeePMD_DIR=$HOME/local/lib/cmake/DeePMD
 export CMAKE_PREFIX_PATH=$HOME/local:$CMAKE_PREFIX_PATH
 ```
-Reload bash:
+
+Reload the shell environment:
 ```bash
 source ~/.bashrc
-```
-Reload Environement:
-```bash
 conda activate deepmd
 ```
+
+---
 ### Install LAMMPS with DeePMD-kit
+
 ```bash
 mkdir -p ./lammps-src
 cd ./lammps-src
-wget https://github.com/lammps/lammps/archive/stable_29Aug2024_update1.tar.gz && tar xf stable_29Aug2024_update1.tar.gz
+wget https://github.com/lammps/lammps/archive/stable_29Aug2024_update1.tar.gz
+tar xf stable_29Aug2024_update1.tar.gz
 mkdir -p ./lammps-stable_29Aug2024_update1/build/
 cd ./lammps-stable_29Aug2024_update1/build/
 ```
-Locate DeePMD-kit Path
+
+#### Locate DeePMD-kit Path
+Find the installed DeePMD-kit directory:
 ```bash
 find ~ -type d -name "deepmd-kit"
 ```
-This will return a `<path_to_deepmd-kit>`. Add it to LAMMPS CMake:
+This command returns `<path_to_deepmd-kit>`, which you must include in LAMMPS CMake configuration:
 ```bash
 echo "include(<path_to_deepmd-kit>/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
 ```
-Build LAMMPS
+
+#### Build LAMMPS
+
 ```bash
 cmake \
     -D CMAKE_INSTALL_PREFIX=$python_venv_path \
@@ -121,14 +155,32 @@ cmake \
     -D PKG_GPU=ON \
     -D GPU_API=CUDA \
     -D GPU_PREC=mixed \
-    -D PKG_MOLECULE=yes -D PKG_RIGID=yes -D PKG_MC=yes -D PKG_USER-COLVARS=yes -D DOWNLOAD_EIGEN3=yes -D PKG_PLUGIN=ON \
+    -D PKG_MOLECULE=yes \
+    -D PKG_RIGID=yes \
+    -D PKG_MC=yes \
+    -D PKG_USER-COLVARS=yes \
+    -D DOWNLOAD_EIGEN3=yes \
+    -D PKG_PLUGIN=ON \
     -DCMAKE_PREFIX_PATH=$python_venv_path ../cmake
 ```
-Compile and install:
+
+#### Compile and Install
 ```bash
 make -j4 install DESTDIR=$HOME/.local
 cd ../../..
 ```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
