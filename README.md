@@ -55,12 +55,12 @@ make -j$(nproc)
 make install
 ```
 
-Add OpenMPI to Environment
-Add these lines to your .bashrc or .bash_profile:
+Add these lines to your .bashrc:
+```bash
 export PATH=$HOME/local/openmpi/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/local/openmpi/lib:$LD_LIBRARY_PATH
 export MPI_HOME=$HOME/local/openmpi
-
+```
 Reload bash:
 ```bash
 source ~/.bashrc
