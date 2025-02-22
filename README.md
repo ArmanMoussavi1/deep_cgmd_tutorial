@@ -27,20 +27,6 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 
 
 
-wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz
-tar -xvzf openmpi-4.1.5.tar.gz
-cd openmpi-4.1.5
-./configure --prefix=$HOME/openmpi
-make -j$(nproc)
-make install
-
-
-export PATH=$HOME/openmpi/bin:$PATH
-export LD_LIBRARY_PATH=$HOME/openmpi/lib:$LD_LIBRARY_PATH
-export C_INCLUDE_PATH=$HOME/openmpi/include:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=$HOME/openmpi/include:$CPLUS_INCLUDE_PATH
-# Add these lines to your ~/.bashrc or ~/.bash_profile for persistence.
-
 
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
@@ -62,10 +48,32 @@ pip install deepmd-kit[gpu,cu12,lmp,ipi]
 
 ----------------------------------------------------
 
-Alternative: Use a Package Manager for Local Installation
-conda install -c conda-forge openmpi
+wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz
+tar -xvzf openmpi-4.1.5.tar.gz
+cd openmpi-4.1.5
 
-conda install libffi --force-reinstall
+mkdir -p $HOME/local/openmpi
+./configure --prefix=$HOME/local/openmpi
+
+make -j$(nproc)
+make install
+
+
+# Add these lines to your .bashrc or .bash_profile:
+export PATH=$HOME/local/openmpi/bin:$PATH
+export LD_LIBRARY_PATH=$HOME/local/openmpi/lib:$LD_LIBRARY_PATH
+export MPI_HOME=$HOME/local/openmpi
+
+reload bash
+source ~/.bashrc
+
+
+mpicc --version
+mpicxx --version
+which mpirun
+
+cmake -DMPI_CXX_COMPILER=$HOME/local/openmpi/bin/mpicxx -DMPI_C_COMPILER=$HOME/local/openmpi/bin/mpicc ..
+make -j$(nproc)
 
 
 
@@ -79,6 +87,11 @@ conda install libffi --force-reinstall
 
 git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
 cd ./deepmd-kit/source && mkdir -p build && cd build && cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local .. && cmake --build . --parallel 4 && make install && make lammps
+
+# add to bashrc
+export DeePMD_DIR=$HOME/local/lib/cmake/DeePMD
+export CMAKE_PREFIX_PATH=$HOME/local:$CMAKE_PREFIX_PATH
+
 
 cd ../../..
 
