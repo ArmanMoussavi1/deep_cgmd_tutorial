@@ -7,7 +7,7 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 
 ## Table of Contents
 
-1. [DeePMD-kit & LAMMPS Installation Guide](#deepmd-&-kit-lammps-installation-guide)
+1. [DeePMD-kit & LAMMPS Installation Guide](#deepmd-kit--lammps-installation-guide)
     - [Install Miniconda](#install-miniconda)
     - [Set Up Conda Environment](#set-up-conda-environment)
     - [Install OpenMPI](#install-openmpi)
