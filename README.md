@@ -29,7 +29,7 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 
 ## DeePMD-kit & LAMMPS Installation Guide
 
-This guide provides step-by-step instructions to install **Miniconda**, **OpenMPI**, **DeePMD-kit**, and **LAMMPS** with DeePMD support. Follow the instructions carefully to ensure a successful installation.
+This guide provides step-by-step instructions to install **Miniconda**, **OpenMPI**, **DeePMD-kit**, and **LAMMPS** with DeePMD support. Follow the instructions carefully to ensure a successful installation. This was performed on a freshly set up remote account on a GPU cluster equipped with an NVIDIA GPU.
 
 ---
 ### Install Miniconda
