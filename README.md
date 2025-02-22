@@ -31,7 +31,6 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 
 This guide provides step-by-step instructions to install **Miniconda**, **OpenMPI**, **DeePMD-kit**, and **LAMMPS** with DeePMD support. Follow the instructions carefully to ensure a successful installation. This was performed on a freshly set up remote account on a GPU cluster equipped with an NVIDIA GPU.
 
----
 ### Install Miniconda
 
 ```bash
@@ -41,7 +40,6 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm ~/miniconda3/miniconda.sh
 ```
 
----
 ### Set Up Conda Environment
 
 ```bash
@@ -53,7 +51,6 @@ python3 -m pip install tensorflow==2.15.0
 pip install deepmd-kit[gpu,cu12,lmp,ipi]
 ```
 
----
 ### Install OpenMPI
 
 ```bash
@@ -88,7 +85,6 @@ mpicxx --version
 which mpirun
 ```
 
----
 ### Install DeePMD-kit
 
 ```bash
@@ -116,7 +112,6 @@ source ~/.bashrc
 conda activate deepmd
 ```
 
----
 ### Install LAMMPS with DeePMD-kit
 
 ```bash
