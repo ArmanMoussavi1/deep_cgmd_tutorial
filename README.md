@@ -22,20 +22,20 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 
 ---
 
-## Installation
-*Needs update*
+## Installation Guide for DeePMD-kit and LAMMPS
+*in progress*
 
 
-Installation Guide for DeePMD-kit and LAMMPS
 
-Install Miniconda
+
+### Install Miniconda
 ```bash
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm ~/miniconda3/miniconda.sh
 ```
-Set Up Conda Environment
+### Set Up Conda Environment
 ```bash
 conda create -n deepmd python=3.9.16
 conda init
@@ -44,7 +44,7 @@ conda activate deepmd
 python3 -m pip install tensorflow==2.15.0
 pip install deepmd-kit[gpu,cu12,lmp,ipi]
 ```
-Install OpenMPI
+### Install OpenMPI
 ```bash
 wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz
 tar -xvzf openmpi-4.1.5.tar.gz
@@ -69,14 +69,13 @@ Reload Environement:
 ```bash
 conda activate deepmd
 ```
-Install DeePMD-kit
+### Install DeePMD-kit
 ```bash
 mkdir lammps_deepmd && cd lammps_deepmd
 git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
 cd ./deepmd-kit/source && mkdir -p build && cd build && cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local .. && cmake --build . --parallel 4 && make install && make lammps
 cd ../../..
 ```
-
 Add DeePMD to Environment
 ```bash
 export DeePMD_DIR=$HOME/local/lib/cmake/DeePMD
@@ -90,7 +89,7 @@ Reload Environement:
 ```bash
 conda activate deepmd
 ```
-Install LAMMPS with DeePMD-kit
+### Install LAMMPS with DeePMD-kit
 ```bash
 mkdir -p ./lammps-src
 cd ./lammps-src
