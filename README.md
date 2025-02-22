@@ -26,74 +26,70 @@ This tutorial guides you through training and using a Deep Potential Molecular D
 *Needs update*
 
 
+Installation Guide for DeePMD-kit and LAMMPS
 
-
+Install Miniconda
+```bash
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm ~/miniconda3/miniconda.sh
-
+```
+Set Up Conda Environment
+```bash
 conda create -n deepmd python=3.9.16
 conda init
 source ~/.bashrc
 conda activate deepmd
 python3 -m pip install tensorflow==2.15.0
 pip install deepmd-kit[gpu,cu12,lmp,ipi]
-
-
-
-
-
-
-
-----------------------------------------------------
-
+```
+Install OpenMPI
+```bash
 wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz
 tar -xvzf openmpi-4.1.5.tar.gz
 cd openmpi-4.1.5
-
 mkdir -p $HOME/local/openmpi
 ./configure --prefix=$HOME/local/openmpi
-
 make -j$(nproc)
 make install
+```
 
-
+Add OpenMPI to Environment
 # Add these lines to your .bashrc or .bash_profile:
 export PATH=$HOME/local/openmpi/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/local/openmpi/lib:$LD_LIBRARY_PATH
 export MPI_HOME=$HOME/local/openmpi
 
-reload bash
+Reload bash:
+```bash
 source ~/.bashrc
-
-
-mpicc --version
-mpicxx --version
-which mpirun
-
-cmake -DMPI_CXX_COMPILER=$HOME/local/openmpi/bin/mpicxx -DMPI_C_COMPILER=$HOME/local/openmpi/bin/mpicc ..
-make -j$(nproc)
-
-
-
-
-
-
-
-
-
-
-
+```
+Reload Environement:
+```bash
+conda activate deepmd
+```
+Install DeePMD-kit
+```bash
 git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
 cd ./deepmd-kit/source && mkdir -p build && cd build && cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local .. && cmake --build . --parallel 4 && make install && make lammps
+cd ../../..
+```
 
-# add to bashrc
+Add DeePMD to Environment
+```bash
 export DeePMD_DIR=$HOME/local/lib/cmake/DeePMD
 export CMAKE_PREFIX_PATH=$HOME/local:$CMAKE_PREFIX_PATH
-
-
-cd ../../..
+```
+Reload bash:
+```bash
+source ~/.bashrc
+```
+Reload Environement:
+```bash
+conda activate deepmd
+```
+Install LAMMPS with DeePMD-kit
 
 mkdir -p ./lammps-src
 cd ./lammps-src
