@@ -56,7 +56,7 @@ make install
 ```
 
 Add OpenMPI to Environment
-# Add these lines to your .bashrc or .bash_profile:
+Add these lines to your .bashrc or .bash_profile:
 export PATH=$HOME/local/openmpi/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/local/openmpi/lib:$LD_LIBRARY_PATH
 export MPI_HOME=$HOME/local/openmpi
@@ -71,6 +71,7 @@ conda activate deepmd
 ```
 Install DeePMD-kit
 ```bash
+mkdir lammps_deepmd && cd lammps_deepmd
 git clone --depth 1 --branch v3.0.1 https://github.com/deepmodeling/deepmd-kit.git
 cd ./deepmd-kit/source && mkdir -p build && cd build && cmake -DENABLE_TENSORFLOW=TRUE -DUSE_TF_PYTHON_LIBS=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/local .. && cmake --build . --parallel 4 && make install && make lammps
 cd ../../..
@@ -90,18 +91,22 @@ Reload Environement:
 conda activate deepmd
 ```
 Install LAMMPS with DeePMD-kit
-
+```bash
 mkdir -p ./lammps-src
 cd ./lammps-src
 wget https://github.com/lammps/lammps/archive/stable_29Aug2024_update1.tar.gz && tar xf stable_29Aug2024_update1.tar.gz
 mkdir -p ./lammps-stable_29Aug2024_update1/build/
 cd ./lammps-stable_29Aug2024_update1/build/
-
-
-find ~ -type d -name "deepmd-kit"  (will return a <path_to_deepmd-kit>)
+```
+Locate DeePMD-kit Path
+```bash
+find ~ -type d -name "deepmd-kit"
+```
+This will return a `<path_to_deepmd-kit>`. Add it to LAMMPS CMake:
+```bash
 echo "include(<path_to_deepmd-kit>/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
-echo "include(/home/amp4121/lammps_deepmd/deepmd-kit/source/lmp/builtin.cmake)" >> ../cmake/CMakeLists.txt
-
+```
+Build LAMMPS
 ```bash
 cmake \
     -D CMAKE_INSTALL_PREFIX=$python_venv_path \
@@ -120,32 +125,15 @@ cmake \
     -D PKG_MOLECULE=yes -D PKG_RIGID=yes -D PKG_MC=yes -D PKG_USER-COLVARS=yes -D DOWNLOAD_EIGEN3=yes -D PKG_PLUGIN=ON \
     -DCMAKE_PREFIX_PATH=$python_venv_path ../cmake
 ```
+Compile and install:
+```bash
 make -j4 install DESTDIR=$HOME/.local
-
-
 cd ../../..
-
-
-pip install deepmd-kit[gpu,cu12,lmp,ipi]
-
-conda install tensorflow
-
-
-
-
-Install DeePMD-kit and its dependencies:
-
-```bash
-module load anaconda3/2018.12
-conda create -n deepmd deepmd-kit=*=*cpu libdeepmd=*=*cpu lammps -c https://conda.deepmodeling.org
-source activate deepmd
 ```
 
-Verify the installation by running the following command:
 
-```bash
-dp -h
-```
+
+
 ---
 ## Generate Training Data
 To train a model, you'll need trajectory data (box dimensions, atomic positions, forces, energies, and virials). [Fine water](./deep_water/fine_water/fine_water.inp)
